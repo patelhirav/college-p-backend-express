@@ -14,8 +14,11 @@ app.get("/", (req, res) => {
       <h1>Welcome to College API 🎓</h1>
       <p>This is a backend service for OTP authentication.</p>
       <p>Check <a href="/api-docs">API Documentation</a> for available endpoints.</p>
-      <p>Login - https://college-p-backend-express.onrender.com/login </p>
-      <p>Login - https://college-p-backend-express.onrender.com/signup </p>
+      <p>Singup - https://college-p-backend-express.onrender.com/auth/signup </p>
+      <p>Login - https://college-p-backend-express.onrender.com/auth/login </p>
+      <p>Send-otp - https://college-p-backend-express.onrender.com/otp/send-otp </p>
+      <p>Verify-otp - https://college-p-backend-express.onrender.com/otp/verify-otp </p>
+      <p>Reset-Password - https://college-p-backend-express.onrender.com/otp/reset-password </p>
   `);
 });
 
