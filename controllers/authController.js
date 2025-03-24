@@ -48,20 +48,22 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await prisma.user.findUnique({
-            where: { email },
-        });
+        let user = await prisma.user.findUnique({ where: { email } });
+        let admin = await prisma.admin.findUnique({ where: { email } });
 
-        if (!user) {
+        if (!user && !admin) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const account = user || admin;
+        const role = user ? 'user' : 'admin';
+
+        const isPasswordValid = await bcrypt.compare(password, account.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ id: account.id, role }, process.env.JWT_SECRET, {
             expiresIn: '1d',
         });
 
@@ -69,14 +71,14 @@ exports.login = async (req, res) => {
             message: 'Login successful',
             token,
             user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
+                id: account.id,
+                name: account.name,
+                email: account.email,
+                role,
             },
         });
     } catch (error) {
-        console.error("🔥 Prisma Error:", error);
+        console.error("Prisma Error:", error);
         return res.status(500).json({ message: 'Internal Server Error', error });
     }
 };
