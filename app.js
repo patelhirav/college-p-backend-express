@@ -3,9 +3,11 @@ const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
 const otpRoutes = require('./routes/otpRoutes')
 const adminRoutes = require('./routes/adminRoutes');
+const cors = require('cors');
 
 const app = express();
 
+app.use(cors())
 app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/otp', otpRoutes);
