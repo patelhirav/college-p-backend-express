@@ -7,7 +7,13 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(cors())
+app.use(cors(
+  {
+    origin: "http://localhost:3000", 
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization"
+  }
+));
 app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/otp', otpRoutes);
@@ -34,8 +40,8 @@ app.get("/", (req, res) => {
 });
 
 
-app.listen(4040, () => {
-  console.log('Server running at http://localhost:4040');
+app.listen(3000, () => {
+  console.log('Server running at http://localhost:3000');
 })
 
 module.exports = app;
