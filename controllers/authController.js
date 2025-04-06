@@ -23,7 +23,7 @@ exports.signup = async (req, res) => {
                 year: year || null,
                 semester: semester || null,
                 enr_no: enr_no || null,
-                branch: role === "USER" ? branch : null,
+                branch: role === "USER" ? branch.toUpperCase() : null, 
                 role: role || "USER",
             },
         });
@@ -42,7 +42,6 @@ exports.signup = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error", error });
     }
 };
-
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
