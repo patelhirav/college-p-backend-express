@@ -56,12 +56,14 @@ exports.login = async (req, res) => {
         }
 
         const account = user || admin;
-        const role = user ? 'user' : 'admin';
 
         const isPasswordValid = await bcrypt.compare(password, account.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
+
+        // ✅ Use actual role from DB instead of hardcoding
+        const role = account.role;
 
         const token = jwt.sign({ id: account.id, role }, process.env.JWT_SECRET, {
             expiresIn: '1d',
@@ -78,7 +80,7 @@ exports.login = async (req, res) => {
             },
         });
     } catch (error) {
-        console.error("Prisma Error:", error);
+        console.error("Login Error:", error);
         return res.status(500).json({ message: 'Internal Server Error', error });
     }
 };
