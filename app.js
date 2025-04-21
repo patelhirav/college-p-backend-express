@@ -1,23 +1,30 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const authRoutes = require('./routes/authRoutes');
-const otpRoutes = require('./routes/otpRoutes')
-const adminRoutes = require('./routes/adminRoutes');
-const cors = require('cors');
-
+const express = require("express");
+const bodyParser = require("body-parser");
+const authRoutes = require("./routes/authRoutes");
+const otpRoutes = require("./routes/otpRoutes");
+const path = require("path");
+const adminRoutes = require("./routes/adminRoutes");
+const assignmentRoutes = require("./routes/assignmentRoutes");
 const app = express();
 
-app.use(cors(
-  {
-    origin: "http://localhost:3000", 
+const cors = require("cors");
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
     methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type,Authorization"
-  }
-));
+    allowedHeaders: "Content-Type,Authorization",
+  }),
+);
 app.use(bodyParser.json());
-app.use('/auth', authRoutes);
-app.use('/otp', otpRoutes);
-app.use('/admin', adminRoutes)
+app.use("/auth", authRoutes);
+app.use("/otp", otpRoutes);
+app.use("/admin", adminRoutes);
+app.use("/assignments", assignmentRoutes);
 
 app.get("/", (req, res) => {
   res.send(`
@@ -36,12 +43,15 @@ app.get("/", (req, res) => {
       <h2>Get Admin - https://college-p-backend-express.onrender.com/admin/admin-list</h2>
       <h2>Edit Admin - https://college-p-backend-express.onrender.com/admin/edit-admin</h2>
       <h2>Delete Admin - https://college-p-backend-express.onrender.com/admin/delete-admin</h2>
+
+      <h1>Assignment API</h1>
+      <h2>Add assignment -https://college-p-backend-express.onrender.com/assignments/add <h2/>
+      <h2>Get assignment -https://college-p-backend-express.onrender.com/assignments/all <h2/>
   `);
 });
 
-
 app.listen(3000, () => {
-  console.log('Server running at http://localhost:3000');
-})
+  console.log("Server running at http://localhost:3000");
+});
 
 module.exports = app;

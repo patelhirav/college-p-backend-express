@@ -22,7 +22,7 @@ enum Branch {
 }
 
 model User {
-  id        String    @id @default(uuid()) @map("_id")
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   email     String    @unique
   password  String
@@ -32,14 +32,14 @@ model User {
   branch    Branch?
   role      Role      @default(USER)
   createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt()
+  updatedAt DateTime? @updatedAt
 }
 
 model OTP {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   email      String
   otp        String
-  expire_at  DateTime
+    expire_at  DateTime
   created_at DateTime @default(now())
 }
 
@@ -49,6 +49,20 @@ model Admin {
   email     String   @unique
   password  String
   branch    Branch
-  createdAt DateTime @default(now())
   role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  // No relation — handled manually by storing adminId in Assignment
+}
+
+model Assignment {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  subject     String
+  description String?
+  year        Int
+  branch      Branch
+  sem         Int
+  fileUrl     String?
+  adminId     String   
+  createdAt   DateTime @default(now())
 }
