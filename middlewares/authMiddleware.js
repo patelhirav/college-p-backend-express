@@ -1,17 +1,37 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-module.exports = (req, res, next) => {
-    const token = req.headers.authorization;
+// Authentication Middleware
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-    if (!token) {
-        return res.status(401).json({ message: "Unauthorized: No token provided" });
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized: No token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res
+      .status(403)
+      .json({ message: "Unauthorized: Invalid or expired token" });
+  }
+};
+
+// Role-Based Authorization Middleware
+const checkRole = (roles = []) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Forbidden: Access denied" });
     }
+    next();
+  };
+};
 
-    try {
-        const decoded = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
-        req.user = decoded; // Attach decoded user data to request
-        next();
-    } catch (error) {
-        return res.status(403).json({ message: "Unauthorized: Invalid token" });
-    }
+module.exports = {
+  authMiddleware,
+  checkRole,
 };

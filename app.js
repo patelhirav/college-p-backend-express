@@ -6,6 +6,7 @@ const path = require("path");
 const adminRoutes = require("./routes/adminRoutes");
 const assignmentRoutes = require("./routes/assignmentRoutes");
 const app = express();
+const studentsRoutes = require("./routes/studentsRoutes");
 
 const cors = require("cors");
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use("/auth", authRoutes);
 app.use("/otp", otpRoutes);
 app.use("/admin", adminRoutes);
 app.use("/assignments", assignmentRoutes);
+app.use("/api/students", studentsRoutes);
 
 app.get("/", (req, res) => {
   res.send(`
@@ -50,8 +52,8 @@ app.get("/", (req, res) => {
   `);
 });
 
-app.listen(3000, () => {
-  console.log("Server running at http://localhost:3000");
+app.listen(3100, () => {
+  console.log("Server running at http://localhost:3100");
 });
 
 module.exports = app;

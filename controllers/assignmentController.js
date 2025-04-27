@@ -6,10 +6,10 @@ exports.addAssignment = async (req, res) => {
     const { title, subject, description, year, branch, sem, adminId } =
       req.body;
 
-    if (!req.file)
-      return res.status(400).json({ message: "PDF file is required" });
+    // if (!req.file)
+    //   return res.status(400).json({ message: "PDF file is required" });
 
-    const fileUrl = `/uploads/${req.file.filename}`;
+    // const fileUrl = `/uploads/${req.file.filename}`;
 
     const newAssignment = await prisma.assignment.create({
       data: {
